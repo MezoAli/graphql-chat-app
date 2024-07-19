@@ -1,14 +1,18 @@
-import { expressjwt } from 'express-jwt';
-import jwt from 'jsonwebtoken';
-import { getUser } from './db/users.js';
+import { expressjwt } from "express-jwt";
+import jwt from "jsonwebtoken";
+import { getUser } from "./db/users.js";
 
-const secret = Buffer.from('+Z3zPGXY7v/0MoMm1p8QuHDGGVrhELGd', 'base64');
+const secret = Buffer.from("+Z3zPGXY7v/0MoMm1p8QuHDGGVrhELGd", "base64");
 
 export const authMiddleware = expressjwt({
-  algorithms: ['HS256'],
+  algorithms: ["HS256"],
   credentialsRequired: false,
   secret,
 });
+
+export const decodeToekn = (accessToken) => {
+  return jwt.verify(accessToken, secret);
+};
 
 export async function handleLogin(req, res) {
   const { username, password } = req.body;
@@ -18,6 +22,6 @@ export async function handleLogin(req, res) {
   } else {
     const claims = { sub: username };
     const token = jwt.sign(claims, secret);
-    res.json({ token });  
+    res.json({ token });
   }
 }
